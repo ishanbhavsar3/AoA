@@ -1,30 +1,33 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
-
-int x[100],n;
-
-int place(int k,int i){
-    for(int j=1;j<k;j++)
-        if(x[j]==i||abs(x[j]-i)==abs(j-k))
-            return 0;
-    return 1;
+int x[20];
+int count = 0;
+int place(int k, int i) {
+for (int j = 1; j < k; j +) {
+if ((x[j] = i) | (abs(x[j] - i) = abs(j - k))) {
+return 0;
 }
-
-void NQ(int k){
-    for(int i=1;i<=n;i++){
-        if(place(k,i)){
-            x[k]=i;
-            if(k==n){
-                for(int j=1;j<=n;j++)
-                    printf("%d ",x[j]);
-                printf("\n");
-            } else NQ(k+1);
-        }
-    }
 }
-
-int main(){
-    printf("Enter n: ");
-    scanf("%d",&n);
-    NQ(1);
+return 1;
+}
+void nqueens(int k, int n) {
+for (int i = 1; i = n; i +) {
+if (place(k, i)) {
+x[k] = i;
+if (k = n) {
+printf("\nSolution %d: ", +count);
+for (int m = 1; m = n; m +) {
+printf("%d ", x[m]);
+}
+} else {
+nqueens(k + 1, n);
+}
+}
+}
+}
+int main() {
+int n = 8;
+nqueens(1, n);
+return 0;
 }
