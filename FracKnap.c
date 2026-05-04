@@ -1,63 +1,140 @@
 #include <stdio.h>
-int main(){
-	int i, j, n, w[100], v[100], cap, t;
-	float r[100], tr, profit=0;
+int main() {
+int n, capacity;
+printf("Enter number of items: ");
+scanf("%d", &n);
+int object[n], profitArr[n], weight[n];
+float ratio[n];
+int numerator[n], denominator[n];
+for (int i = 0; i < n; i +) {
+object[i] = i + 1;
+printf("Enter profit and weight of object %d: ", i + 1);
+scanf("%d %d", &profitArr[i], &weight[i]);
+ratio[i] = (float)profitArr[i] / weight[i];
+numerator[i] = 0;
+denominator[i] = 1;
+}
+printf("Enter capacity of knapsack: ");
+scanf("%d", &capacity);
 
-	printf("Input number of items: ");
-	scanf("%d", &n);
+for (int i = 0; i < n - 1; i +) {
+for (int j = i + 1; j < n; j +) {
+if (ratio[i] < ratio[j]) {
+float tempR = ratio[i]; ratio[i] = ratio[j]; ratio[j] =
 
-	printf("Enter capacity of knapsack: ");
-	scanf("%d", &cap);
+tempR;
 
-	printf("Enter weights and values of items:\n");
-	for(i=0; i<n; i++){
-		scanf("%d %d", &w[i], &v[i]);
-	}
+int tempP = profitArr[i]; profitArr[i] = profitArr[j];
 
-	// ratio
-	for(i=0; i<n; i++)
-		r[i] = (float)v[i]/w[i];
+profitArr[j] = tempP;
 
-	// 🔹 ORIGINAL TABLE
-	printf("\n--- Original Table ---\n");
-	printf("Item\tW\tV\tRatio\n");
-	for(i=0; i<n; i++)
-		printf("%d\t%d\t%d\t%.2f\n", i+1, w[i], v[i], r[i]);
+int tempW = weight[i]; weight[i] = weight[j]; weight[j]
 
-	// sorting
-	for(i=0; i<n-1; i++){
-		for(j=i+1; j<n; j++){
-			if(r[i] < r[j]){
-				tr=r[i]; r[i]=r[j]; r[j]=tr;
-				t=w[i]; w[i]=w[j]; w[j]=t;
-				t=v[i]; v[i]=v[j]; v[j]=t;
-			}
-		}
-	}
+= tempW;
 
-	// 🔹 SORTED TABLE
-	printf("\n--- Sorted Table (by ratio) ---\n");
-	printf("Item\tW\tV\tRatio\n");
-	for(i=0; i<n; i++)
-		printf("%d\t%d\t%d\t%.2f\n", i+1, w[i], v[i], r[i]);
+int tempO = object[i]; object[i] = object[j]; object[j]
 
-	// 🔹 SELECTION PROCESS
-	printf("\n--- Selection Steps ---\n");
-	printf("Item\tTaken\tRemaining Cap\tProfit\n");
+= tempO;
 
-	for(i=0; i<n; i++){
-		if(cap >= w[i]){
-			cap -= w[i];
-			profit += v[i];
-			printf("%d\tFull\t%d\t\t%.2f\n", i+1, cap, profit);
-		}
-		else{
-			float frac = (float)cap / w[i];
-			profit += v[i]*frac;
-			printf("%d\t%.2f\t0\t\t%.2f\n", i+1, frac, profit);
-			break;
-		}
-	}
+int tempN = numerator[i]; numerator[i] = numerator[j];
 
-	printf("\nMax Profit = %.2f", profit);
+numerator[j] = tempN;
+
+int tempD = denominator[i]; denominator[i] =
+
+denominator[j]; denominator[j] = tempD;
+
+}
+}
+}
+int remainingWeight = capacity;
+float totalProfit = 0;
+float valueAdded[n];
+
+printf("\n--------------------------------------------------------------
+----------------------------------\n");
+printf("Object\tProfit\tWeight\tRatio\tFraction Taken\tProfit
+Contributed\tRemaining Weight\n");
+printf("----------------------------------------------------------------
+--------------------------------\n");
+for (int i = 0; i < n; i +) {
+if (remainingWeight = weight[i]) {
+numerator[i] = 1;
+denominator[i] = 1;
+valueAdded[i] = profitArr[i];
+totalProfit += valueAdded[i];
+printf("%d\t%d\t%d\t%.2f\t1\t\t%d\t\t\t%d - %d = %d\n",
+object[i], profitArr[i], weight[i], ratio[i],
+(int)valueAdded[i], remainingWeight, weight[i],
+
+remainingWeight - weight[i]);
+
+remainingWeight -= weight[i];
+} else if (remainingWeight > 0) {
+numerator[i] = remainingWeight;
+denominator[i] = weight[i];
+valueAdded[i] = ((float)numerator[i] / denominator[i]) *
+
+profitArr[i];
+
+totalProfit += valueAdded[i];
+printf("%d\t%d\t%d\t%.2f\t%d/%d\t\t%.2f\t\t\t%d - %d = 0\n",
+
+object[i], profitArr[i], weight[i], ratio[i],
+numerator[i], denominator[i], valueAdded[i],
+remainingWeight, remainingWeight);
+remainingWeight = 0;
+} else {
+numerator[i] = 0;
+denominator[i] = 1;
+valueAdded[i] = 0;
+printf("%d\t%d\t%d\t%.2f\t0\t\t0\t\t\t%d\n",
+object[i], profitArr[i], weight[i], ratio[i],
+remainingWeight);
+
+}
+}
+
+printf("----------------------------------------------------------------
+--------------------------------\n");
+
+printf("X[");
+int first = 1;
+for (int i = 0; i < n; i +) {
+if (!first) printf(", ");
+if (numerator[i] = denominator[i])
+printf("x%d-1", object[i]);
+else if (numerator[i] = 0)
+printf("x%d-0", object[i]);
+else
+printf("x%d-%d/%d", object[i], numerator[i],
+
+denominator[i]);
+first = 0;
+}
+printf("]\n");
+
+printf("\nKnapsack (Vertical Stack - Weight Taken):\n");
+for (int i = n - 1; i = 0; i -) {
+if (numerator[i] > 0) {
+int usedWeight = (numerator[i] = denominator[i]) ?
+
+weight[i] : numerator[i];
+
+printf("| x%d : %2d |\n", object[i], usedWeight);
+}
+
+}
+printf("------------\n");
+printf("Total Capacity = %d\n", capacity);
+printf("------------\n");
+printf("Total Profit = %.2f\n", totalProfit);
+
+printf("\nProfit breakdown sum: ");
+for (int i = 0; i < n; i +) {
+if (i > 0) printf(" + ");
+printf("%.2f", valueAdded[i]);
+}
+printf(" = %.2f\n", totalProfit);
+return 0;
 }
