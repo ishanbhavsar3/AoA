@@ -19,6 +19,7 @@ void sumset(int i, int wt, int rem) {
         } else {
             inc[i + 1] = 1;
             sumset(i + 1, wt + w[i + 1], rem - w[i + 1]);
+
             inc[i + 1] = 0;
             sumset(i + 1, wt, rem - w[i + 1]);
         }
